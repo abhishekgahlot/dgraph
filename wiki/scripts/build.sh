@@ -34,6 +34,14 @@ rebuild() {
 	echo -e "$(date) $GREEN Updating docs for branch: $1.$RESET"
 	# Generate new docs after merging.
 
+	dir=''
+	echo -e "versions[0] is ${VERSIONS[0]}"
+	if [[ $2 != "${VERSIONS[0]}" ]]; then
+		dir=$2
+	fi
+
+	echo -e "Rebuliding at ${destination}"
+
 	# In Unix environments, env variables should also be exported to be seen by Hugo
 	export CURRENT_BRANCH=${1}
 	export VERSION_STRING=$(joinVersions)
@@ -41,8 +49,8 @@ rebuild() {
 	HUGO_TITLE="Dgraph Doc ${2}"\
 		VERSIONS=${VERSION_STRING} \
 		CURRENT_BRANCH=${1} hugo\
-		--destination=public/"$2"\
-		--baseURL="$HOST"/"$2" 1> /dev/null
+		--destination=public/"$dir"\
+		--baseURL="$HOST"/"$dir" 1> /dev/null
 }
 
 branchUpdated()
@@ -83,7 +91,7 @@ checkAndUpdate()
 
 while true; do
 	# Lets move to the Wiki directory.
-	pushd /home/ubuntu/dgraph/wiki > /dev/null
+	# pushd /home/ubuntu/dgraph/wiki > /dev/null
 
 	currentBranch=$(git rev-parse --abbrev-ref HEAD)
 
