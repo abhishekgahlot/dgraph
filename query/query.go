@@ -1812,6 +1812,19 @@ func ProcessGraph(ctx context.Context, sg, parent *SubGraph, rch chan error) {
 					rch <- err
 					return
 				}
+			} else if child.Params.Expand == "_forward_" {
+				child.ExpandPreds, err = GetNodePredicates(ctx, sg.DestUIDs)
+				if err != nil {
+					rch <- err
+					return
+				}
+			} else if child.Params.Expand == "_reverse_" {
+				child.ExpandPreds, err = GetNodePredicates(ctx, sg.DestUIDs)
+				fmt.Println(child.ExpandPreds)
+				if err != nil {
+					rch <- err
+					return
+				}
 			}
 
 			for _, v := range child.ExpandPreds {
